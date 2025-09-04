@@ -4,8 +4,10 @@
     <string name="model">模型</string>
     <string name="text_something">在此键入</string>
     <string name="ok">好</string>
-    <string name="ask_something_to_get_started">输入按好开始!</string>
+    <string name="ask_something_to_get_started">输入按好开始</string>
     <string name="settings">设置</string>
     <string name="back">返回</string>
     <string name="expand">expand</string>
+    <string name="clear_history">删除历史</string>
+    <string name="clear_caches">删除缓存</string>
 </resources>

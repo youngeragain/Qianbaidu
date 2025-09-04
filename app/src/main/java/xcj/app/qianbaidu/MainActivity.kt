@@ -34,11 +34,6 @@ class MainActivity : ComponentActivity() {
 
     private var documentResultLauncher: ActivityResultLauncher<Uri?>? = null
     private var contentResultLauncher: ActivityResultLauncher<PickVisualMediaRequest>? = null
-    private val usbActionState: MutableState<Pair<String, Any?>?> = mutableStateOf(null)
-
-    private lateinit var usbBroadcastReceiver: USBBroadcastReceiver
-
-    private val mainViewModel: MainViewModel by viewModels()
 
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,11 +42,11 @@ class MainActivity : ComponentActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             window.isNavigationBarContrastEnforced = false
         }
-        val windowInsetsControllerCompat = WindowInsetsControllerCompat(window, window.decorView)
-        // windowInsetsControllerCompat.hide(WindowInsetsCompat.Type.systemBars())
-//        window.attributes = window.attributes.apply {
-//            flags = flags or WindowManager.LayoutParams.FLAG_SECURE
-//        }
+        /*val windowInsetsControllerCompat = WindowInsetsControllerCompat(window, window.decorView)
+        windowInsetsControllerCompat.hide(WindowInsetsCompat.Type.systemBars())
+        window.attributes = window.attributes.apply {
+            flags = flags or WindowManager.LayoutParams.FLAG_SECURE
+        }*/
         setContent {
             AppTheme {
                 Scaffold { paddingValues ->
@@ -68,25 +63,7 @@ class MainActivity : ComponentActivity() {
             val takeFlags =
                 Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
             contentResolver.takePersistableUriPermission(uri, takeFlags)
-            val folderRootDocumentFile = DocumentFile.fromTreeUri(this, uri)
-            if (folderRootDocumentFile == null) {
-                return@registerForActivityResult
-            }
-            Log.d(
-                TAG,
-                "file:${folderRootDocumentFile.name}, isDictionary:${folderRootDocumentFile.isDirectory}, uri:${folderRootDocumentFile.uri}"
-            )
 
-            folderRootDocumentFile.creteFileInFolder(this, "application/text", "a_text_file.txt") {
-                write("this is a text file")
-                flush()
-            }
-            folderRootDocumentFile.listFiles().forEach { documentFile ->
-                Log.d(
-                    TAG,
-                    "file:${documentFile.name}, isDictionary:${documentFile?.isDirectory}, documentFile.type:${documentFile.type}"
-                )
-            }
         }
 
         contentResultLauncher = registerForActivityResult(
@@ -94,24 +71,9 @@ class MainActivity : ComponentActivity() {
         ) { uri ->
             Log.d(TAG, "content select result:$uri")
         }
-
-        usbBroadcastReceiver = USBBroadcastReceiver {
-            usbActionState.value = it
-        }
-
-        val intentFilter = IntentFilter()
-        intentFilter.addAction(UsbManager.ACTION_USB_ACCESSORY_ATTACHED)
-        intentFilter.addAction(UsbManager.ACTION_USB_ACCESSORY_DETACHED)
-        intentFilter.addAction(UsbManager.ACTION_USB_DEVICE_ATTACHED)
-        intentFilter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED)
-        registerReceiver(usbBroadcastReceiver, intentFilter)
-
-        // Access the ViewModel to trigger its initialization if not already done.
-        Log.d(TAG, "MainViewModel instance: $mainViewModel")
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        unregisterReceiver(usbBroadcastReceiver)
     }
 }

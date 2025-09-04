@@ -89,4 +89,11 @@ class MainViewModel @Inject constructor(
     fun showQA(qa: QA) {
         _currentQAState.value = QAState.ResponseDone.fromQA(qa)
     }
+
+    fun clearHistory() {
+        viewModelScope.launch {
+            localQARepository.deleteAllQas()
+            _aqHistory.clear()
+        }
+    }
 }

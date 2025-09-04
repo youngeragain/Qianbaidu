@@ -8,6 +8,7 @@ import androidx.room.Query
 import androidx.room.Update
 import xcj.app.qianbaidu.data.model.QA
 import kotlinx.coroutines.flow.Flow
+import kotlin.jvm.java
 
 @Dao
 interface QADao {
@@ -20,6 +21,9 @@ interface QADao {
 
     @Delete
     suspend fun delete(qa: QA)
+
+    @Query("DELETE FROM qa_table")
+    suspend fun deleteAllQas()
 
     @Query("SELECT * FROM qa_table ORDER BY timestamp DESC")
     fun getAllQas(): Flow<List<QA>>

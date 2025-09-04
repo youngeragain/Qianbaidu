@@ -21,4 +21,9 @@ class LocalQARepository(private val qaDao: QADao) {
     suspend fun deleteQa(qa: QA) {
         qaDao.delete(qa)
     }
+
+    suspend fun deleteAllQas() {
+        qaDao.deleteAllQas()
+    }
+
 }
