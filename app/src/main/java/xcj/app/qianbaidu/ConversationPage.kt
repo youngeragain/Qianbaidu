@@ -284,10 +284,7 @@ fun ConversationPage(onSettingClick: () -> Unit) {
                             current = currentAiModel,
                             dataList = availableAIModels,
                             onPreviewClick = {
-                                val currentHistoryQA = currentHistoryQA
-                                if (currentHistoryQA != null) {
-                                    viewModel.showQA(currentHistoryQA)
-                                }
+
                             },
                             preview = { aiModel ->
                                 AIModelChipContent(aiModel)
